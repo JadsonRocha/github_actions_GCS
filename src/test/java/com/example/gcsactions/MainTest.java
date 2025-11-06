@@ -7,7 +7,6 @@ import java.io.PrintStream;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
-
     @Test
     void main_shouldPrintHelloAndSum() {
         PrintStream originalOut = System.out;
