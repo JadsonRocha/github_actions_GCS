@@ -1,3 +1,18 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   build-test:
     name: Build & Test (Java ${{ matrix.java }})
@@ -5,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 21, 25 ]
+        java: [21, 25]
 
     steps:
       - name: Checkout
@@ -14,18 +29,18 @@ jobs:
       - name: Setup Temurin JDK
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          cache: maven
+          cache: 'maven'
 
       # Java 21: roda tudo (test + checkstyle + spotbugs + jacoco)
       - name: Maven Verify (full)
-        if: matrix.java != 25
+        if: ${{ matrix.java != 25 }}
         run: mvn -B -ntp clean verify
 
       # Java 25: pula apenas o SpotBugs (workaround de compatibilidade)
       - name: Maven Verify (skip SpotBugs on JDK 25)
-        if: matrix.java == 25
+        if: ${{ matrix.java == 25 }}
         run: mvn -B -ntp -Dspotbugs.skip=true clean verify
 
       - name: Upload test reports
@@ -50,6 +65,3 @@ jobs:
           path: |
             target/spotbugsXml.xml
             target/site/checkstyle.html
-
-
-on:
