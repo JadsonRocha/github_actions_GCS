@@ -33,12 +33,10 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: 'maven'
 
-      # Java 21: roda tudo (test + checkstyle + spotbugs + jacoco)
       - name: Maven Verify (full)
         if: ${{ matrix.java != 25 }}
         run: mvn -B -ntp clean verify
 
-      # Java 25: pula apenas o SpotBugs (workaround de compatibilidade)
       - name: Maven Verify (skip SpotBugs on JDK 25)
         if: ${{ matrix.java == 25 }}
         run: mvn -B -ntp -Dspotbugs.skip=true clean verify

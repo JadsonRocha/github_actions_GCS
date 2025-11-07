@@ -20,14 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # >>> Adicione este passo <<<
       - name: Setup Temurin JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 25
           cache: maven
-      # <<<
 
       - uses: github/codeql-action/init@v3
         with:
